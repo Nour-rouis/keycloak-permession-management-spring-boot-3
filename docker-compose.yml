@@ -1,0 +1,26 @@
+services:
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:21.1.1
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "9090:8080"
+    command:
+      - "start-dev"
+backend:
+  build:
+    context: .\keycloak-integration-with-spring-boot-3  
+  ports:
+    - "8081:8081"
+  depends_on:
+    - keycloak
+
+frontend:
+  build:
+    context: .\InfoNight
+  ports:
+    - "3000:3000"
+  depends_on:
+    - backend
